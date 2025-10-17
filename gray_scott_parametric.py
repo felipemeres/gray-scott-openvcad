@@ -57,15 +57,15 @@ pattern_solid = materials.id("red")
 
 # ===== CONTROL PARAMETERS =====
 # 1. GEOMETRY AMOUNT CONTROL
-threshold = 0.4        # Lower = more geometry, Higher = less geometry
+threshold = 0.3        # Lower = more geometry, Higher = less geometry
                        # Try: 0.2 (lots), 0.4 (medium), 0.6 (sparse)
 
 # 2. TIME EVOLUTION CONTROL (simulates time steps in reaction-diffusion)
-time_param = 0.5       # 0.0 = early stage, 1.0 = late stage evolution
+time_param = 1       # 0.0 = early stage, 1.0 = late stage evolution
                        # Controls pattern maturity/complexity
 
 # 3. PATTERN SCALE CONTROL
-frequency_scale = 1.0  # 0.5 = larger patterns, 2.0 = smaller patterns
+frequency_scale = 0.5  # 0.5 = larger patterns, 2.0 = smaller patterns
                        # Controls the "wavelength" of the reaction-diffusion
 
 # 4. PATTERN INTENSITY CONTROL
@@ -78,7 +78,6 @@ evolution_rate = 1.0   # How fast patterns develop over space
 
 # ===== 3D PRINTING CONTROL =====
 make_printable = True    # True = manifold/printable, False = artistic/open
-min_wall_thickness = 2.0 # Minimum wall thickness for printing (mm)
 
 # ===== DOMAIN CONTROL =====
 domain_size = pv.Vec3(50, 50, 25)  # Define the actual domain dimensions

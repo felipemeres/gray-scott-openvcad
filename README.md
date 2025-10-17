@@ -54,11 +54,6 @@ This project transforms **Gray-Scott reaction-diffusion equations** into **3D pr
 - **True**: Manifold, watertight geometry with boundary closure
 - **False**: Pure mathematical surfaces (artistic/exploration)
 
-#### `min_wall_thickness` (Float)
-- **1.0mm**: Fine detail printers
-- **2.0mm**: Standard FDM printers
-- **3.0mm**: Robust structural prints
-
 ## Ready Presets
 
 Try these parameter combinations for different aesthetic results:
@@ -95,6 +90,97 @@ frequency_scale = 2.0
 amplitude = 0.3
 ```
 
+## Example Parameter Sets
+
+### Beginner
+
+#### Simple Coral Structure
+```python
+threshold = 0.3
+time_param = 0.2
+frequency_scale = 0.8
+amplitude = 0.4
+evolution_rate = 1.0
+make_printable = True
+```
+- Dense, branching coral-like structure; good starting point.
+
+#### Geometric Lattice
+```python
+threshold = 0.5
+time_param = 0.8
+frequency_scale = 1.5
+amplitude = 0.5
+evolution_rate = 0.8
+make_printable = True
+```
+- Regular, geometric patterns with solid connectivity.
+
+### Advanced
+
+#### Organic Architecture
+```python
+threshold = 0.4
+time_param = 0.6
+frequency_scale = 1.2
+amplitude = 0.6
+evolution_rate = 1.5
+make_printable = True
+```
+- Building-like structures with smooth flow; ideal for architectural exploration.
+
+#### Jewelry Scale
+```python
+threshold = 0.45
+time_param = 0.7
+frequency_scale = 2.0
+amplitude = 0.3
+evolution_rate = 1.8
+make_printable = True
+```
+- Fine, intricate motifs suited for small prints.
+
+#### Vase-like Structures
+```python
+threshold = 0.35
+time_param = 0.4
+frequency_scale = 0.9
+amplitude = 0.5
+evolution_rate = 1.2
+make_printable = True
+```
+- Hollow, vessel-like forms with organic walls.
+
+### Artistic Exploration
+
+#### Abstract Sculpture
+```python
+threshold = 0.25
+time_param = 0.9
+frequency_scale = 0.6
+amplitude = 0.7
+evolution_rate = 2.0
+make_printable = False  # visualization only
+```
+- Complex, expressive geometry for renderings or experimentation.
+
+#### Minimal Forms
+```python
+threshold = 0.6
+time_param = 0.3
+frequency_scale = 1.8
+amplitude = 0.2
+evolution_rate = 0.5
+make_printable = True
+```
+- Clean silhouettes with restrained detailing.
+
+### Troubleshooting Cheatsheet
+- **Too dense**: increase `threshold` (0.4 → 0.5) or decrease `amplitude` (0.6 → 0.4).
+- **Too sparse**: decrease `threshold` (0.5 → 0.3) or increase `amplitude` (0.3 → 0.5).
+- **Pattern too large**: increase `frequency_scale` (1.0 → 1.5).
+- **Pattern too small**: decrease `frequency_scale` (1.0 → 0.7).
+- **Not printable**: set `make_printable = True`
 ## Usage
 
 1. **Install OpenVCAD Studio** from [OpenVCAD releases](https://github.com/MacCurdyLab/OpenVCAD-Public/releases)
