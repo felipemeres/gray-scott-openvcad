@@ -92,34 +92,37 @@ k_param = f"({k1} + ({k2}-{k1})*(x/{domain_size.x}) * (1 + 0.2 * {time_param}))"
 F_param = f"({F1} + ({F2}-{F1})*(y/{domain_size.y}) * (1 + 0.3 * {time_param}))"
 
 # Enhanced Gray-Scott with CORRECTED scaling to fill entire domain
-# Pattern wavelengths now properly scaled to domain dimensions
+# Pattern wavelengths properly scaled to fill the 50x50x25 domain
+base_scale_x = domain_size.x / 4.0  # ~4 cycles across X
+base_scale_y = domain_size.y / 4.0  # ~4 cycles across Y
+base_scale_z = domain_size.z / 2.0  # ~2 cycles across Z
+
 pattern = f"""
 sqrt(({k_param}) * ({F_param})) / sqrt({k2} * {F2}) * (
-    0.5 + {amplitude} * cos(2*pi * x / {12.0/frequency_scale}) * cos(2*pi * y / {12.0/frequency_scale}) +
-    {amplitude * 0.75} * cos(2*pi * x / {8.0/frequency_scale} + pi/3 + {time_param} * pi * {evolution_rate}) *
-                          cos(2*pi * y / {8.0/frequency_scale} + pi/3 + {time_param} * pi * {evolution_rate}) +
-    {amplitude * 0.5} * cos(2*pi * x / {16.0/frequency_scale}) * cos(2*pi * y / {16.0/frequency_scale}) *
-                        cos(2*pi * z / {6.0/frequency_scale} + {time_param} * 2*pi * {evolution_rate}) +
-    {amplitude * 0.625} * sin(2*pi * x / {10.0/frequency_scale} + {time_param} * pi * {evolution_rate}) *
-                          sin(2*pi * y / {10.0/frequency_scale} + {time_param} * pi * {evolution_rate})
-) * (1.0 + 0.3 * cos(2*pi * z / {8.0/frequency_scale} + {time_param} * pi * {evolution_rate}))
+    0.5 + {amplitude} * cos(2*pi * x / {base_scale_x/frequency_scale}) * cos(2*pi * y / {base_scale_y/frequency_scale}) +
+    {amplitude * 0.75} * cos(2*pi * x / {base_scale_x*0.67/frequency_scale} + pi/3 + {time_param} * pi * {evolution_rate}) *
+                          cos(2*pi * y / {base_scale_y*0.67/frequency_scale} + pi/3 + {time_param} * pi * {evolution_rate}) +
+    {amplitude * 0.5} * cos(2*pi * x / {base_scale_x*1.33/frequency_scale}) * cos(2*pi * y / {base_scale_y*1.33/frequency_scale}) *
+                        cos(2*pi * z / {base_scale_z/frequency_scale} + {time_param} * 2*pi * {evolution_rate}) +
+    {amplitude * 0.625} * sin(2*pi * x / {base_scale_x*0.8/frequency_scale} + {time_param} * pi * {evolution_rate}) *
+                          sin(2*pi * y / {base_scale_y*0.8/frequency_scale} + {time_param} * pi * {evolution_rate})
+) * (1.0 + 0.3 * cos(2*pi * z / {base_scale_z*0.67/frequency_scale} + {time_param} * pi * {evolution_rate}))
 """
 
 # Create geometry with controllable threshold and printability options
 if make_printable:
-    # Create printable version with boundary constraints to ensure closure
-    # Add boundary conditions that force the pattern to be solid at domain edges
-    boundary_fade = f"""
-    min(min(x - {min_wall_thickness}, {domain_size.x - min_wall_thickness} - x),
-        min(min(y - {min_wall_thickness}, {domain_size.y - min_wall_thickness} - y),
-            min(z - {min_wall_thickness}, {domain_size.z - min_wall_thickness} - z))) / {min_wall_thickness}
-    """
+    # Create printable version using the same approach as VCAD examples
+    # Intersect the infinite pattern surface with a bounding box to ensure closure
 
-    # Pattern with boundary fade (becomes solid near edges for manifold closure)
-    manifold_pattern = f"({pattern}) + max(0, -({boundary_fade}) * 0.5)"
+    # Main Gray-Scott pattern (infinite surface)
+    pattern_surface = pv.Function(f"{threshold} - ({pattern})", pattern_solid)
 
-    # Create manifold geometry with boundary constraints
-    root = pv.Function(f"{threshold} - ({manifold_pattern})", pattern_solid)
+    # Bounding container (this is the key - same approach as csg_mug.py and lattice examples)
+    bounding_container = pv.RectPrism(pv.Vec3(0, 0, 0), domain_size, pattern_solid)
+
+    # Intersection automatically closes any holes where pattern meets boundaries
+    # This is the standard VCAD approach for manifold geometry
+    root = pv.Intersection(False, [pattern_surface, bounding_container])
 
 else:
     # Artistic version (pure mathematical surface, may have open edges)
