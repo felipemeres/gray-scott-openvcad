@@ -1,0 +1,24 @@
+# OpenVCAD generated files
+*.obj
+*.stl
+*.ply
+*.3mf
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
