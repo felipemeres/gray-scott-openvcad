@@ -1,4 +1,5 @@
 # Parametric Gray-Scott Reaction-Diffusion for OpenVCAD
+![Example](./example.png)
 
 Convert reaction-diffusion mathematics into manufacturable 3D geometry using OpenVCAD's volumetric modeling capabilities.
 
